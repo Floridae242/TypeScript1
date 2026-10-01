@@ -55,9 +55,7 @@ docker run --rm hello-world
 
 ## Git และ CI
 
-เมื่อ push ไป `main`, Workflow 1 จะติดตั้ง dependency และรัน test พอ Workflow 1 จบ Workflow 2, 3 และ 4 จะเริ่มแยกกันตามตัวอย่างในสไลด์
-
-สำหรับ part 3: Workflow 2 build Docker image, Workflow 3 ตรวจ dependency และ Workflow 4 ทดสอบ User API กับ MongoDB ชั่วคราวใน GitHub Actions โดยไม่ต้องใส่ Atlas URI ลงใน GitHub
+เมื่อ push ไป `main`, workflow `Part 3 CI` จะรัน unit test ก่อน จากนั้น build Docker image, ตรวจ dependency และทดสอบ User API กับ MongoDB ชั่วคราวเป็นงานขนาน โดยไม่ต้องใส่ Atlas URI ลงใน GitHub
 
 `npm run test:api` ใช้ `MONGODB_URI` ที่ตั้งไว้ ทดสอบ CRUD แล้วลบผู้ใช้ทดสอบเมื่อจบ
 

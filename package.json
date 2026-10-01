@@ -6,7 +6,7 @@
     "dev": "nodemon",
     "build": "tsc",
     "start": "node dist/index.js",
-    "test": "npm run build && node dist/Test1.js",
+    "test": "npm run build && node --test --test-reporter=spec dist/Test1.js",
     "test:api": "npm run build && node scripts/api-smoke-test.mjs"
   },
   "dependencies": {
