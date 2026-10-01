@@ -1,15 +1,16 @@
-# Deployment part 2: TypeScript, Git และ GitHub Actions
+# Deployment part 2–3: TypeScript, GitHub Actions และ MongoDB
 
-โปรเจกต์นี้ทำตามตัวอย่างใน `สำเนาของ part2.pdf` หน้า 9–16 และ 33–58 โดยมี Express server, TypeScript build, nodemon, unit test และ GitHub Actions
+โปรเจกต์นี้ทำตามตัวอย่างใน `สำเนาของ part2.pdf` และ `สำเนาของ part3.pdf` โดยมี Express server, TypeScript build, unit test, GitHub Actions และ User API ที่ใช้ MongoDB
 
 ## รันในเครื่อง
 
 ```bash
 npm ci
+cp -n .env.example .env
 npm run dev
 ```
 
-เปิด `http://localhost:3000` จะเห็น `Hello, World!` ถ้าพอร์ต 3000 ถูกใช้งาน ให้รัน `PORT=3001 npm run dev` และเปิดพอร์ต 3001 แทน
+แก้ `MONGODB_URI` ใน `.env` ให้เป็น connection string ของ MongoDB Atlas หรือ MongoDB ในเครื่องก่อนรัน server (`.env` ถูก ignore โดย Git) จากนั้นเปิด `/test.html` บนพอร์ตที่ตั้งไว้ใน `PORT` เพื่อทดลองเพิ่มผู้ใช้ หากพอร์ต 3000 ถูกใช้งาน ให้เปลี่ยน `PORT` ใน `.env`
 
 ```bash
 npm run build
@@ -19,9 +20,42 @@ npm test
 
 `npm run build` สร้าง JavaScript ใน `dist/` ส่วน `npm test` build แล้วทดสอบ `Utils.add()` ด้วย exit status ที่ GitHub Actions ตรวจจับได้
 
+## User API จาก part 3
+
+| Method | URL | งาน |
+| --- | --- | --- |
+| POST | `/api/users` | สร้างผู้ใช้ด้วย `name`, `email`, `password` |
+| GET | `/api/users` | ดูผู้ใช้ทั้งหมด |
+| GET | `/api/users/:id` | ดูผู้ใช้ตาม ID |
+| PUT | `/api/users/:id` | แก้ไขผู้ใช้ |
+| DELETE | `/api/users/:id` | ลบผู้ใช้ |
+
+ตัวอย่างส่งข้อมูล:
+
+```bash
+curl -X POST http://localhost:3000/api/users \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"A","email":"a@example.com","password":"example123"}'
+```
+
+รหัสผ่านถูก hash ก่อนบันทึก และ API ไม่ส่งรหัสผ่านกลับมา ตัวอย่างนี้ใช้ฝึกในเครื่อง ยังไม่มีระบบ login หรือสิทธิ์ผู้ใช้
+
+## Docker จาก part 3
+
+หลังเปิด Docker Desktop แล้ว ลองคำสั่งพื้นฐานจากสไลด์:
+
+```bash
+docker --version
+docker image ls
+docker container ls
+docker run --rm hello-world
+```
+
+หากต้องการทดลอง MongoDB ในเครื่อง สามารถใช้ `MONGODB_URI=mongodb://127.0.0.1:27017/typescript1` ใน `.env` เมื่อมี MongoDB ที่รันอยู่ หรือใช้ MongoDB Atlas ตามสไลด์
+
 ## Git และ CI
 
-Repository นี้เริ่มต้นบน branch `main` แล้ว เมื่อมี GitHub repository ปลายทางจึงเพิ่ม `origin` และ push `main` ได้ ไฟล์ `.github/workflows/ci.yml` จะทำงานเมื่อ push ไป `main` หรือเปิด pull request โดยติดตั้ง dependency, build และทดสอบบน Ubuntu
+เมื่อ push ไป `main`, Workflow 1 จะติดตั้ง dependency และรัน test พอ Workflow 1 จบ Workflow 2, 3 และ 4 จะเริ่มแยกกันตามตัวอย่างในสไลด์
 
 ตัวอย่างการตรวจและจัดการเวอร์ชันจากหน้า 7–8, 16–17, 28–31:
 
