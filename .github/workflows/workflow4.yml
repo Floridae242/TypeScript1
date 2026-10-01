@@ -4,9 +4,36 @@ on:
   workflow_run:
     workflows: ["Workflow 1"]
     types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
-  job1:
+  api_test:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      mongodb:
+        image: mongo:8.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
     steps:
-      - run: echo "Workflow 4 started"
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      - run: npm ci
+      - run: npm run test:api
+        env:
+          MONGODB_URI: mongodb://127.0.0.1:27017/typescript1_ci
+          PORT: '3100'

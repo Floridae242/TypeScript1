@@ -4,9 +4,19 @@ on:
   workflow_run:
     workflows: ["Workflow 1"]
     types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
-  job1:
+  docker_build:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - run: echo "Workflow 2 started"
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - run: docker build -t typescript1:part3 .
