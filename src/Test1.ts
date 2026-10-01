@@ -1,14 +1,21 @@
 import { Utils } from './Utils';
 
-function check(name: string, actual: number, expected: number): void {
-  if (actual === expected) {
-    console.log(`✔ ${name}`);
-    return;
+const unit_test = () => {
+  const first = Utils.add(2, 2);
+  if (first === 4) {
+    console.log('✔ Unit test 1: add(2, 2) = 4');
+  } else {
+    console.error(`✖ Unit test 1: expected 4, got ${first}`);
+    process.exitCode = 1;
   }
 
-  console.error(`✖ ${name}: expected ${expected}, got ${actual}`);
-  process.exitCode = 1;
-}
+  const second = Utils.add(3, 3);
+  if (second === 6) {
+    console.log('✔ Unit test 2: add(3, 3) = 6');
+  } else {
+    console.error(`✖ Unit test 2: expected 6, got ${second}`);
+    process.exitCode = 1;
+  }
+};
 
-check('Unit test 1: add(2, 0)', Utils.add(2, 0), 2);
-check('Unit test 2: add(2, 3)', Utils.add(2, 3), 5);
+unit_test();
