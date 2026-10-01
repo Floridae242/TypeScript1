@@ -1,11 +1,14 @@
-import { strict as assert } from 'node:assert';
-import test from 'node:test';
 import { Utils } from './Utils';
 
-test('Unit test 1: add(2, 0) = 2', () => {
-  assert.equal(Utils.add(2, 0), 2);
-});
+function check(name: string, actual: number, expected: number): void {
+  if (actual === expected) {
+    console.log(`✔ ${name}`);
+    return;
+  }
 
-test('Unit test 2: add(2, 3) = 5', () => {
-  assert.equal(Utils.add(2, 3), 5);
-});
+  console.error(`✖ ${name}: expected ${expected}, got ${actual}`);
+  process.exitCode = 1;
+}
+
+check('Unit test 1: add(2, 0)', Utils.add(2, 0), 2);
+check('Unit test 2: add(2, 3)', Utils.add(2, 3), 5);
