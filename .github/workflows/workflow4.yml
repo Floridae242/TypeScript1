@@ -1,4 +1,4 @@
-name: Workflow 2
+name: Workflow 4
 
 on:
   workflow_run:
@@ -9,4 +9,4 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Workflow 2 started"
+      - run: echo "Workflow 4 started"

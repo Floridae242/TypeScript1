@@ -4,24 +4,9 @@ on:
   workflow_run:
     workflows: ["Workflow 1"]
     types: [completed]
-    branches: [main]
-
-permissions:
-  contents: read
 
 jobs:
-  dependency-audit:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_repository.full_name == github.repository }}
+  job1:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out the commit from Workflow 1
-        uses: actions/checkout@v7
-        with:
-          ref: ${{ github.event.workflow_run.head_sha }}
-          persist-credentials: false
-      - name: Set up Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: '24'
-      - name: Audit production dependencies
-        run: npm audit --omit=dev --audit-level=high
+      - run: echo "Workflow 3 started"

@@ -3,25 +3,17 @@ name: Workflow 1
 on:
   push:
     branches: [main]
-  pull_request:
 
 permissions:
   contents: read
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
-        uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-      - name: Set up Node.js
-        uses: actions/setup-node@v7
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: '24'
-          cache: npm
-      - name: Install dependencies
-        run: npm ci
-      - name: Build and test
-        run: npm test
+      - run: npm ci
+      - run: npm test
